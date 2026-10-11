@@ -1,0 +1,117 @@
+
+/* ========================================
+   MENU PRINCIPAL
+======================================== */
+
+:host ::ng-deep .custom-menubar {
+  background-color: #1e3a5f;
+  border: none;
+  border-radius: 8px;
+  min-height: 10vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ========================================
+   CONTAINER DOS ITENS
+======================================== */
+
+:host ::ng-deep .custom-menubar .p-menubar-root-list {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+/* ========================================
+   LINKS DOS ITENS
+======================================== */
+
+:host ::ng-deep .custom-menubar .p-menubar-item-link {
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: #ffffff;
+  font-size: 1.6rem;
+  font-weight: 600;
+  background: transparent !important;
+  text-decoration: none;
+  transition: none;
+}
+
+/* ========================================
+   TEXTO DOS ITENS
+======================================== */
+
+:host ::ng-deep .custom-menubar .p-menubar-item-label {
+  color: #ffffff;
+  font-size: 1.6rem;
+}
+
+/* ========================================
+   ÍCONES
+======================================== */
+
+:host ::ng-deep .custom-menubar .p-menubar-item-icon {
+  color: #ffd166;
+  font-size: 1.6rem;
+  margin-right: 8px;
+}
+
+/* ========================================
+   REMOVE O FUNDO NO HOVER
+======================================== */
+
+:host ::ng-deep .custom-menubar .p-menubar-item-content,
+:host ::ng-deep .custom-menubar .p-menubar-item-content:hover,
+:host ::ng-deep .custom-menubar .p-menubar-item-link:hover,
+:host ::ng-deep .custom-menubar .p-menubar-item:hover {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* ========================================
+   SUBLINHADO ANIMADO
+======================================== */
+
+:host ::ng-deep .custom-menubar .p-menubar-item-link::after {
+  content: "";
+  position: absolute;
+  bottom: .003rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  height: 3px;
+  background-color: #32a84e;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.25s ease;
+}
+
+/* Exibe o sublinhado ao passar o mouse */
+:host ::ng-deep .custom-menubar
+.p-menubar-item-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* ========================================
+   ACESSIBILIDADE: NAVEGAÇÃO POR TECLADO
+======================================== */
+
+:host ::ng-deep .custom-menubar
+.p-menubar-item-link:focus-visible {
+  outline: 4px solid #ffd166;
+  outline-offset: 2px;
+}
+
+:host ::ng-deep .custom-menubar .p-menubar-item-link:hover .p-menubar-item-icon {
+  color: #ffd166 !important;
+}
+
+/* Mantém a cor original dos ícones quando o item recebe foco */
+:host ::ng-deep .custom-menubar .p-menubar-item-link:focus .p-menubar-item-icon,
+:host ::ng-deep .custom-menubar .p-menubar-item-link:focus-visible .p-menubar-item-icon {
+  color: #ffd166 !important;
+}
+
+/* Evita que o hover altere a cor do texto */
+:host ::ng-deep .custom-menubar .p-menubar-item-link:hover .p-menubar-item-label {
+  color: #ffffff !important;
+}
