@@ -21,9 +21,16 @@ export class App {
       icon: 'pi pi-star',
       routerLink: ['/tabela'] },
     {
-      label: 'Clubes',
-      icon: 'pi pi-shield',
-      routerLink: ['/clubes']
+      label: 'Clube',
+        icon: 'pi pi-plus',
+        routerLink: ['/clube/listar'],
+          items: [
+            {
+              label: 'Novos Clubes',
+              icon: 'pi pi-shield',
+              routerLink: ['/clube/cadastrar'],
+            }
+          ]
     },
     {
       label: 'Jogos',

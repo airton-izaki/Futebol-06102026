@@ -1,1 +1,82 @@
-<p>clube-lista works!</p>
+<section class="club-list-page">
+  <div class="club-list-container">
+    <header class="list-page-header">
+      <div>
+        <h1>Clubes cadastrados</h1>
+        <p>Lista de clubes registrados no sistema.</p>
+      </div>
+      <a class="primary-button" routerLink="/clube/cadastrar">
+        <i class="pi pi-plus" aria-hidden="true"></i>
+        Cadastrar clube
+      </a>
+    </header>
+
+    <section class="club-list-card" aria-labelledby="club-list-title">
+      <header class="club-list-card-header">
+        <div>
+          <h2 id="club-list-title"><i class="pi pi-shield" aria-hidden="true"></i> Clubes cadastrados</h2>
+          <p>Clubes com localização informada no cadastro.</p>
+        </div>
+        <a class="secondary-button" routerLink="/clube/cadastrar">
+          <i class="pi pi-plus" aria-hidden="true"></i>
+          Novo clube
+        </a>
+      </header>
+
+      <p *ngIf="carregando" class="list-message" role="status">Carregando clubes...</p>
+
+      <div *ngIf="erro && !carregando" class="list-error" role="alert">
+        <span>{{ erro }}</span>
+        <button type="button" class="text-button" (click)="carregarClubes()">Tentar novamente</button>
+      </div>
+
+      <div *ngIf="!carregando && !erro" class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Nome oficial</th>
+              <th scope="col">Clube</th>
+              <th scope="col">Fundação</th>
+              <th scope="col">Modelo de gestão</th>
+              <th scope="col">Cidade / UF</th>
+              <th scope="col" class="action-column">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let clube of clubes">
+              <td>
+                <div class="club-identity">
+                  <img *ngIf="clube.escudo; else escudoPlaceholder" [src]="clube.escudo" [alt]="'Escudo do ' + clube.nome" class="club-crest" />
+                  <ng-template #escudoPlaceholder>
+                    <span class="club-crest-placeholder" aria-hidden="true"><i class="pi pi-shield"></i></span>
+                  </ng-template>
+                  <div>
+                    <strong>{{ clube.nome_oficial }}</strong>
+                    <small>ID: #{{ clube.id }}</small>
+                  </div>
+                </div>
+              </td>
+              <td>{{ clube.nome }} <small class="club-acronym">({{ clube.sigla }})</small></td>
+              <td>{{ clube.fundacao | date:'dd/MM/yyyy':'UTC' }}</td>
+              <td><span class="management-badge">{{ clube.gestao }}</span></td>
+              <td>
+                <i class="pi pi-map-marker location-icon" aria-hidden="true"></i>
+                {{ clube.cidade || 'Não informada' }}<span *ngIf="clube.cidade && clube.estado"> - {{ clube.estado | uppercase }}</span>
+              </td>
+              <td class="action-column">
+                <a *ngIf="clube.website" class="website-link" [href]="clube.website" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Abrir site de ' + clube.nome">
+                  <i class="pi pi-external-link" aria-hidden="true"></i>
+                  Site
+                </a>
+                <span *ngIf="!clube.website" class="muted-value">—</span>
+              </td>
+            </tr>
+            <tr *ngIf="clubes.length === 0">
+              <td colspan="6" class="empty-list">Nenhum clube cadastrado até o momento.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</section>

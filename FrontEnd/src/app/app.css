@@ -42,6 +42,9 @@
 ======================================== */
 
 :host ::ng-deep .custom-menubar .p-menubar-item-label {
+  display: inline !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   color: #ffffff;
   font-size: 1.6rem;
 }
@@ -114,4 +117,16 @@
 /* Evita que o hover altere a cor do texto */
 :host ::ng-deep .custom-menubar .p-menubar-item-link:hover .p-menubar-item-label {
   color: #ffffff !important;
+}
+
+/* O submenu tem fundo claro, então seus rótulos precisam ser escuros. */
+:host ::ng-deep .custom-menubar .p-menubar-submenu .p-menubar-item-label,
+:host ::ng-deep .custom-menubar .p-menubar-submenu .p-menubar-item-link:hover .p-menubar-item-label {
+  color: #1e3a5f !important;
+  font-size: 1rem;
+}
+
+:host ::ng-deep .custom-menubar .p-menubar-submenu .p-menubar-item-icon {
+  color: #1e3a5f;
+  font-size: 1rem;
 }

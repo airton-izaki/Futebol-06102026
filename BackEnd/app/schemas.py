@@ -1,16 +1,13 @@
 # Validações do Pydantic
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
+from app.models import Clube
 
-class TimeBase(BaseModel):
-    nome: str
-    estado: str
 
-class TimeCreate(TimeBase):
-    pass
+class ClubeCreate(Clube):
+    """Dados validados recebidos do formulário de cadastro de clube."""
 
-class TimeResponse(TimeBase):
-    id: int
-
-    class Config:
-        from_attributes = True
+    @field_validator("website", "escudo", mode="before")
+    @classmethod
+    def strings_vazias_sao_nulas(cls, valor):
+        return None if valor == "" else valor

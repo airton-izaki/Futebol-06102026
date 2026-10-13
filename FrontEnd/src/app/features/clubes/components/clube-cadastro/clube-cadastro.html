@@ -1,1 +1,122 @@
-<p>clube-cadastro works!</p>
+<section class="club-form-card">
+ 
+  <header class="club-form-header">
+    <span class="club-form-icon pi pi-shield" aria-hidden="true"></span>
+    <div>
+      <h1>Cadastro de clube</h1>
+      <p>Preencha os dados para cadastrar um novo clube.</p>
+    </div>
+  </header>
+
+  <p *ngIf="erroCadastro" class="form-error" role="alert">{{ erroCadastro }}</p>
+
+  <p-dialog
+    header="Clube cadastrado com sucesso"
+    [(visible)]="modalSucessoVisivel"
+    [modal]="true"
+    [closable]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: 'min(28rem, 90vw)' }"
+  >
+    <div class="success-dialog-content" role="status">
+      <i class="pi pi-check-circle" aria-hidden="true"></i>
+      <p><strong>{{ clubeCadastrado }}</strong> foi salvo no banco de dados.</p>
+      <small>ID do clube: #{{ idClubeCadastrado }}</small>
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton type="button" label="Fechar" (click)="modalSucessoVisivel = false"></button>
+    </ng-template>
+  </p-dialog>
+
+  <form [formGroup]="clubeForm" (ngSubmit)="onSubmit()" class="club-form">
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="nome_oficial">Nome oficial <span>*</span></label>
+        <input pInputText id="nome_oficial" formControlName="nome_oficial" placeholder="Ex.: Sport Club Corinthians Paulista" />
+      </div>
+      <div class="form-field">
+        <label for="nome">Nome popular <span>*</span></label>
+        <input pInputText id="nome" formControlName="nome" placeholder="Ex.: Corinthians" />
+      </div>
+    </div>
+
+    <div class="form-grid form-grid-details">
+      <div class="form-field">
+        <label for="sigla">Sigla <span>*</span></label>
+        <input pInputText id="sigla" formControlName="sigla" placeholder="COR" maxlength="5" />
+      </div>
+      <div class="form-field">
+        <label for="gestao">Modelo de gestão <span>*</span></label>
+        <p-select id="gestao" formControlName="gestao" [options]="gestaoOpcoes" placeholder="Selecione" class="form-control"></p-select>
+      </div>
+      <div class="form-field">
+        <label for="fundacao">Data de fundação <span>*</span></label>
+        <p-datepicker id="fundacao" formControlName="fundacao" dateFormat="yy-mm-dd" [showIcon]="true" class="form-control"></p-datepicker>
+      </div>
+    </div>
+
+    <div class="form-grid form-grid-location">
+      <div class="form-field">
+        <label for="estado">UF <span>*</span></label>
+        <p-select id="estado" formControlName="estado" [options]="estados" optionLabel="nome" optionValue="sigla" placeholder="Selecione a UF" [loading]="carregandoEstados" class="form-control"></p-select>
+      </div>
+      <div class="form-field">
+        <label for="cidade">Cidade <span>*</span></label>
+        <p-select id="cidade" formControlName="cidade" [options]="cidades" optionLabel="nome" optionValue="nome" placeholder="Selecione a cidade" [loading]="carregandoCidades" [disabled]="!clubeForm.get('estado')?.value || carregandoCidades" class="form-control"></p-select>
+      </div>
+      <div class="form-field">
+        <label for="estadio">Estádio</label>
+        <input pInputText id="estadio" formControlName="estadio" placeholder="Neo Química Arena" />
+      </div>
+    </div>
+
+    <small class="location-error" *ngIf="erroLocalizacao" role="alert">{{ erroLocalizacao }}</small>
+
+    <div class="form-grid form-grid-colors">
+      <div class="form-field">
+        <label for="cor_primaria">Cor primária <span>*</span></label>
+        <div class="color-field">
+          <p-colorPicker formControlName="cor_primaria"></p-colorPicker>
+          <input pInputText id="cor_primaria" formControlName="cor_primaria" />
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="cor_secundaria">Cor secundária</label>
+        <div class="color-field">
+          <p-colorPicker formControlName="cor_secundaria"></p-colorPicker>
+          <input pInputText id="cor_secundaria" formControlName="cor_secundaria" />
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="cor_terciaria">Cor terciária</label>
+        <input pInputText id="cor_terciaria" formControlName="cor_terciaria" placeholder="Opcional" />
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="website">Website (URL)</label>
+        <input pInputText id="website" formControlName="website" placeholder="https://..." />
+      </div>
+      <div class="form-field">
+        <label for="escudo">URL do escudo</label>
+        <input pInputText id="escudo" formControlName="escudo" placeholder="https://..." />
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="observacao">Observação</label>
+      <textarea pTextarea id="observacao" formControlName="observacao" rows="3" placeholder="Informações adicionais"></textarea>
+    </div>
+
+    <div class="checkbox-field">
+      <p-checkbox formControlName="ativo" [binary]="true" inputId="ativo"></p-checkbox>
+      <label for="ativo">Clube ativo</label>
+    </div>
+
+    <div class="form-actions">
+      <button pButton type="submit" [label]="salvando ? 'Salvando...' : 'Cadastrar clube'" icon="pi pi-check" [disabled]="clubeForm.invalid || salvando"></button>
+    </div>
+  </form>
+</section>
