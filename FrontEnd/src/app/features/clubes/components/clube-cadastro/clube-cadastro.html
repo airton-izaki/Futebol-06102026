@@ -3,15 +3,15 @@
   <header class="club-form-header">
     <span class="club-form-icon pi pi-shield" aria-hidden="true"></span>
     <div>
-      <h1>Cadastro de clube</h1>
-      <p>Preencha os dados para cadastrar um novo clube.</p>
+          <h1>{{ modoEdicao ? 'Editar clube' : 'Cadastro de clube' }}</h1>
+          <p>{{ modoEdicao ? 'Altere os dados do clube e salve as mudanças.' : 'Preencha os dados para cadastrar um novo clube.' }}</p>
     </div>
   </header>
 
   <p *ngIf="erroCadastro" class="form-error" role="alert">{{ erroCadastro }}</p>
 
   <p-dialog
-    header="Clube cadastrado com sucesso"
+    [header]="modoEdicao ? 'Clube atualizado com sucesso' : 'Clube cadastrado com sucesso'"
     [(visible)]="modalSucessoVisivel"
     [modal]="true"
     [closable]="true"
@@ -21,13 +21,15 @@
   >
     <div class="success-dialog-content" role="status">
       <i class="pi pi-check-circle" aria-hidden="true"></i>
-      <p><strong>{{ clubeCadastrado }}</strong> foi salvo no banco de dados.</p>
+      <p><strong>{{ clubeCadastrado }}</strong> foi {{ modoEdicao ? 'atualizado' : 'salvo' }} no banco de dados.</p>
       <small>ID do clube: #{{ idClubeCadastrado }}</small>
     </div>
     <ng-template pTemplate="footer">
       <button pButton type="button" label="Fechar" (click)="modalSucessoVisivel = false"></button>
     </ng-template>
   </p-dialog>
+
+  <p *ngIf="carregandoClube" class="form-loading" role="status">Carregando dados do clube...</p>
 
   <form [formGroup]="clubeForm" (ngSubmit)="onSubmit()" class="club-form">
     <div class="form-grid">
@@ -116,7 +118,7 @@
     </div>
 
     <div class="form-actions">
-      <button pButton type="submit" [label]="salvando ? 'Salvando...' : 'Cadastrar clube'" icon="pi pi-check" [disabled]="clubeForm.invalid || salvando"></button>
+      <button pButton type="submit" [label]="salvando ? 'Salvando...' : (modoEdicao ? 'Salvar alterações' : 'Cadastrar clube')" icon="pi pi-check" [disabled]="clubeForm.invalid || salvando || carregandoClube"></button>
     </div>
   </form>
 </section>

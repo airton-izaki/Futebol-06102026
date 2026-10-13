@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { finalize, timeout } from 'rxjs';
 import { ClubeCreate, GestaoEnum } from '../../models/clube.model';
 import { Clube as ClubeService, EstadoResponse, CidadeResponse } from '../../services/clube';
@@ -48,6 +49,9 @@ export class ClubeCadastro implements OnInit{
     modalSucessoVisivel = false;
     clubeCadastrado = '';
     idClubeCadastrado: number | null = null;
+    clubeId: number | null = null;
+    modoEdicao = false;
+    carregandoClube = false;
 
     gestaoOpcoes = [
       { label: 'Associativo', value: GestaoEnum.ASSOCIATIVO },
@@ -56,7 +60,11 @@ export class ClubeCadastro implements OnInit{
       { label: 'Híbrido', value: GestaoEnum.HIBRIDO }
     ];
 
-    constructor(private fb: FormBuilder, private clubeService: ClubeService) {}
+    constructor(
+      private fb: FormBuilder,
+      private route: ActivatedRoute,
+      private clubeService: ClubeService
+    ) {}
 
     ngOnInit(): void {
       this.iniciarFormulario();
@@ -65,6 +73,34 @@ export class ClubeCadastro implements OnInit{
         this.clubeForm.get('cidade')?.reset('');
         this.cidades = [];
         if (sigla) this.carregarCidades(sigla);
+      });
+
+      this.route.paramMap.subscribe(parametros => {
+        const id = Number(parametros.get('id'));
+        this.clubeId = Number.isInteger(id) && id > 0 ? id : null;
+        this.modoEdicao = this.clubeId !== null;
+        if (this.clubeId !== null) this.carregarClube(this.clubeId);
+      });
+    }
+
+    private carregarClube(id: number): void {
+      this.carregandoClube = true;
+      this.erroCadastro = '';
+      this.clubeService.buscarClube(id).pipe(
+        timeout({ first: 20000 }),
+        finalize(() => this.carregandoClube = false)
+      ).subscribe({
+        next: clube => {
+          this.clubeForm.patchValue({
+            ...clube,
+            fundacao: this.converterData(clube.fundacao)
+          }, { emitEvent: false });
+          this.carregarCidades(clube.estado);
+        },
+        error: erro => {
+          this.erroCadastro = erro.error?.detail
+            ?? `Não foi possível carregar o clube (HTTP ${erro.status || 'sem resposta'}).`;
+        }
       });
     }
 
@@ -134,7 +170,11 @@ export class ClubeCadastro implements OnInit{
       };
 
       this.salvando = true;
-      this.clubeService.cadastrarClube(dados).pipe(
+      const requisicao = this.clubeId === null
+        ? this.clubeService.cadastrarClube(dados)
+        : this.clubeService.atualizarClube(this.clubeId, dados);
+
+      requisicao.pipe(
         timeout({ first: 20000 }),
         finalize(() => this.salvando = false)
       ).subscribe({
@@ -163,6 +203,11 @@ export class ClubeCadastro implements OnInit{
       const mes = String(valor.getMonth() + 1).padStart(2, '0');
       const dia = String(valor.getDate()).padStart(2, '0');
       return `${ano}-${mes}-${dia}`;
+    }
+
+    private converterData(valor: string): Date {
+      const [ano, mes, dia] = valor.slice(0, 10).split('-').map(Number);
+      return new Date(ano, mes - 1, dia);
     }
 
 }

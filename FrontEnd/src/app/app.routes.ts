@@ -18,6 +18,10 @@ export const routes: Routes = [
     component: ClubeLista
   },
   {
+    path: 'clube/editar/:id',
+    component: ClubeCadastro
+  },
+  {
     path: 'clube/cadastrar',
     component: ClubeCadastro
   },

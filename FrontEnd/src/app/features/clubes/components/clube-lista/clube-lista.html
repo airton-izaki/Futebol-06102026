@@ -64,11 +64,10 @@
                 {{ clube.cidade || 'Não informada' }}<span *ngIf="clube.cidade && clube.estado"> - {{ clube.estado | uppercase }}</span>
               </td>
               <td class="action-column">
-                <a *ngIf="clube.website" class="website-link" [href]="clube.website" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Abrir site de ' + clube.nome">
-                  <i class="pi pi-external-link" aria-hidden="true"></i>
-                  Site
+                <a class="edit-link" [routerLink]="['/clube/editar', clube.id]" [attr.aria-label]="'Editar ' + clube.nome">
+                  <i class="pi pi-pencil" aria-hidden="true"></i>
+                  Editar
                 </a>
-                <span *ngIf="!clube.website" class="muted-value">—</span>
               </td>
             </tr>
             <tr *ngIf="clubes.length === 0">

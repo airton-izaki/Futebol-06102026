@@ -37,8 +37,16 @@ export class Clube {
     return this.http.get<ClubeResponse[]>(`${this.apiUrl}/clubes/`);
   }
 
+  buscarClube(id: number): Observable<ClubeResponse> {
+    return this.http.get<ClubeResponse>(`${this.apiUrl}/clubes/${id}`);
+  }
+
   cadastrarClube(dados: ClubeCreate): Observable<ClubeResponse> {
     return this.http.post<ClubeResponse>(`${this.apiUrl}/clubes/`, dados);
+  }
+
+  atualizarClube(id: number, dados: ClubeCreate): Observable<ClubeResponse> {
+    return this.http.put<ClubeResponse>(`${this.apiUrl}/clubes/${id}`, dados);
   }
 
 }
